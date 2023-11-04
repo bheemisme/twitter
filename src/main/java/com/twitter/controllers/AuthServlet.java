@@ -4,13 +4,17 @@
  */
 package com.twitter.controllers;
 
+import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import com.twitter.db.DBConn;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  *
@@ -30,19 +34,20 @@ public class AuthServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet AuthServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet AuthServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+        
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/index.jsp");
+        try {
+            
+            Connection conn = DBConn.getConnection();
+            request.setAttribute("msg", "connection established");
+        } catch (SQLException e) {
+            request.setAttribute("msg", e.getMessage());
+        } catch(ClassNotFoundException c) {
+            request.setAttribute("msg", c.getMessage());
+        } finally {
+            dispatcher.forward(request, response);
         }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
