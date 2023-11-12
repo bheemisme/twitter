@@ -5,6 +5,7 @@
 - java 17
 - maven 3.9
 - tailwindcss for jsp styling
+- apache tomcat - 10.1.15
 
 ## Tasks remaining
 
