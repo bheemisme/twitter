@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context path="/twitter">
-    <Resource name="jdbc/TweeterDB"
+<Context antiJARLocking="true" path="/twitter">
+    <Resource name="jdbc/TwitterDB"
               type="javax.sql.DataSource"
               driverClassName="org.sqlite.JDBC"
-              url="jdbc:sqlite:tweeter.db">
+              url="jdbc:sqlite:/tmp/twitter.db">
     </Resource>
+    
 </Context>

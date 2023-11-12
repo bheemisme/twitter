@@ -5,8 +5,13 @@
 package com.twitter.db;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
+import javax.sql.DataSource;
+import jakarta.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
 
 /**
  *
@@ -14,17 +19,26 @@ import java.sql.SQLException;
  */
 public class DBConn {
 
+    @Resource(name = "jdbc/TweeterDB")
+    private static DataSource ds;
+
     private final static String URI = "jdbc:sqlite:twitter.db";
     private static Connection conn;
+
     public DBConn() {
     }
-    
-    public static Connection getConnection() throws SQLException, ClassNotFoundException{
-        if(conn == null){
-            Class.forName("org.sqlite.JDBC");
-            conn = DriverManager.getConnection(URI);
+
+    public static Connection getConnection() throws SQLException, ClassNotFoundException, NamingException {
+
+        if (conn == null) {
+            if (ds == null) {
+                Context envCtx = (Context) InitialContext.doLookup("java:comp/env");
+                ds = (DataSource) envCtx.lookup("jdbc/TwitterDB");
+            }
+
+            conn = ds.getConnection();
         }
         return conn;
     }
-    
+
 }

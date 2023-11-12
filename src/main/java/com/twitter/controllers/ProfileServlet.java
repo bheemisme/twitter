@@ -4,50 +4,31 @@
  */
 package com.twitter.controllers;
 
-import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import com.twitter.db.DBConn;
-import java.sql.Connection;
-import java.sql.SQLException;
-
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpSession;
+import java.util.logging.Logger;
 /**
  *
  * @author sudarshan
  */
-@WebServlet(name = "AuthServlet", urlPatterns = {"/auth"})
-public class AuthServlet extends HttpServlet {
+@WebServlet(name = "ProfileServlet", urlPatterns = {"/profile"})
+public class ProfileServlet extends HttpServlet {
+    private static final Logger logger = Logger.getLogger(HomeServlet.class.getName());
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        logger.info(session.getAttribute("email").toString());
+        logger.info(session.getAttribute("username").toString());
         
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/index.jsp");
-        try {
-            
-            Connection conn = DBConn.getConnection();
-            request.setAttribute("msg", "connection established");
-        } catch (SQLException e) {
-            request.setAttribute("msg", e.getMessage());
-        } catch(ClassNotFoundException c) {
-            request.setAttribute("msg", c.getMessage());
-        } finally {
-            dispatcher.forward(request, response);
-        }
-
+        request.setAttribute("title", "Profile");
+        response.setContentType("text/html;charset=UTF-8");
+        request.getRequestDispatcher("./pages/profile.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
