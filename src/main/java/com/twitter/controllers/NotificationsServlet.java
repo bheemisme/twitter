@@ -5,33 +5,45 @@
 package com.twitter.controllers;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpSession;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 /**
  *
  * @author sudarshan
  */
-@WebServlet(name = "ProfileServlet", urlPatterns = {"/profile"})
-public class ProfileServlet extends HttpServlet {
-    private static final Logger logger = Logger.getLogger(HomeServlet.class.getName());
+@WebServlet(name = "NotificationsServlet", urlPatterns = {"/notifications"})
+public class NotificationsServlet extends HttpServlet {
 
+     private static final Logger logger = Logger.getLogger(NotificationsServlet.class.getName());
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
         HttpSession session = request.getSession();
         Object email = session.getAttribute("email");
         if(email == null){    
             response.sendRedirect("/twitter/login");
         }else{
             logger.log(Level.INFO, email.toString());
-            request.setAttribute("title", "Profile");
-            request.getRequestDispatcher("./pages/profile.jsp").forward(request, response);       
+            request.setAttribute("title", "Notifications");
+            request.getRequestDispatcher("./pages/notifications.jsp").forward(request, response);       
         }
         
     }

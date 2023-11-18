@@ -5,22 +5,33 @@
 package com.twitter.controllers;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpSession;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 /**
  *
  * @author sudarshan
  */
-@WebServlet(name = "ProfileServlet", urlPatterns = {"/profile"})
-public class ProfileServlet extends HttpServlet {
-    private static final Logger logger = Logger.getLogger(HomeServlet.class.getName());
+@WebServlet(name = "SettingsServlet", urlPatterns = {"/settings"})
+public class SettingsServlet extends HttpServlet {
 
+    private static final Logger logger = Logger.getLogger(SettingsServlet.class.getName());
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
@@ -30,10 +41,9 @@ public class ProfileServlet extends HttpServlet {
             response.sendRedirect("/twitter/login");
         }else{
             logger.log(Level.INFO, email.toString());
-            request.setAttribute("title", "Profile");
-            request.getRequestDispatcher("./pages/profile.jsp").forward(request, response);       
+            request.setAttribute("title", "Settings");
+            request.getRequestDispatcher("./pages/settings.jsp").forward(request, response);       
         }
-        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

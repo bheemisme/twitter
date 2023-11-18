@@ -27,6 +27,7 @@
             <button type="submit" class="outline-none rounded-lg px-4 py-1 text-white bg-blue-400">Login</button>
         </div>
     </form>
+    <a href="/twitter/signup" class="border-2 p-2 rounded">Signup</a>
 </body>
 
 </html>

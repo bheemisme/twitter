@@ -46,7 +46,10 @@
                     <button class="border-2 rounded-full px-2 cursor-pointer">x</button>
                 </div>-->
                    <%
-                       out.println(session.getAttribute("username") + "email" );
+                       out.println(session.getAttribute("username"));
+                   %>
+                   <%
+                       out.println(session.getAttribute("email"));
                    %>
                 <div class="flex flex-row  mt-4 px-2 items-start w-full space-x-4">
                     <img src="./static/images/profile-img.jpg" class="w-10 h-10 rounded-full object-cover " alt="">
