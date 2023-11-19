@@ -13,5 +13,7 @@
 2. Write a FollowerModal for following and unfollowing
 3. Write a NotificationModal for creating notifications
 4. Add a WebFilter for authorizating protected routes, right now authorizing is completely done inside the servlet
+5. Password hashing has to be implemented
+6. Error flags should appear in jsp
 
 
