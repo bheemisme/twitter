@@ -8,8 +8,10 @@ import com.twitter.db.DBConn;
 import com.twitter.utils.ShortUUID;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
 
@@ -46,16 +48,16 @@ public class Tweet {
     }
     
     public String getContent(){
-        return this.email;
+        return this.content;
     }
     
     public static Tweet createTweet(String email, String content) throws SQLException, ClassNotFoundException, NamingException{
-        User user = User.find(email);
+        
         Connection db = DBConn.getConnection(); 
         logger.info("connection established with DB");
         boolean success;
-        Tweet t= new Tweet(ShortUUID.generateShortUUID(), user.getEmail(), LocalDateTime.now(),content);
-        try (PreparedStatement st = db.prepareStatement("INSERT INTO tweets (id, email, creation_time, content) VALUES (?, ?, ?)")) {
+        Tweet t= new Tweet(ShortUUID.generateShortUUID(), email, LocalDateTime.now(),content);
+        try (PreparedStatement st = db.prepareStatement("INSERT INTO tweets (id, email, creation_time, content) VALUES (?, ?, ?, ?)")) {
             st.setString(1, t.getId());
             st.setString(2, t.getEmail());
             st.setString(3, t.getDate().toString());
@@ -66,5 +68,49 @@ public class Tweet {
             return t;
         }
         return null;
+    }
+    
+    public static ArrayList<Tweet> getTweets(String email) throws SQLException, ClassNotFoundException, NamingException {
+        
+        Connection db = DBConn.getConnection(); 
+        logger.info("connection established with DB");
+        String query = "SELECT * FROM tweets WHERE email = ?";
+        ArrayList<Tweet> tweets = new ArrayList<>();
+        try (PreparedStatement st = db.prepareStatement(query)) {
+            
+            st.setString(1, email);
+            ResultSet results = st.executeQuery();
+            while(results.next()){
+                tweets.add(new Tweet(
+                        results.getString(1),
+                        results.getString(2),
+                        LocalDateTime.parse(results.getString(3)),
+                        results.getString(4)
+                ));
+            }
+            return tweets;
+        }
+        
+    }
+    
+    public static ArrayList<Tweet> getAllTweets() throws SQLException, ClassNotFoundException, NamingException {
+        Connection db = DBConn.getConnection(); 
+        logger.info("connection established with DB");
+        String query = "SELECT * FROM tweets";
+        ArrayList<Tweet> tweets = new ArrayList<>();
+        try (PreparedStatement st = db.prepareStatement(query)) {
+            
+            ResultSet results = st.executeQuery();
+            while(results.next()){
+                tweets.add(new Tweet(
+                        results.getString(1),
+                        results.getString(2),
+                        LocalDateTime.parse(results.getString(3)),
+                        results.getString(4)
+                ));
+            }
+            return tweets;
+        }
+        
     }
 }

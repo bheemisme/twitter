@@ -2,12 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package java.com.twitter.controllers;
+package com.twitter.controllers;
 
 
 import com.twitter.models.Tweet;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -44,14 +43,7 @@ public class TweetServlet extends HttpServlet {
         
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -66,17 +58,15 @@ public class TweetServlet extends HttpServlet {
                 Tweet t = Tweet.createTweet((String) email, request.getParameter("tweet"));
                 response.sendRedirect("/twitter/profile");
             } catch (SQLException | ClassNotFoundException | NamingException ex) {
-                Logger.getLogger(TweetServlet.class.getName()).log(Level.SEVERE, null, ex);
+                logger.severe(ex.getLocalizedMessage());
+                request.setAttribute("message", ex.getMessage());
+                request.getRequestDispatcher("./pages/404.jsp").forward(request, response);
             }   
             
         }
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
+    
     @Override
     public String getServletInfo() {
         return "Short description";
