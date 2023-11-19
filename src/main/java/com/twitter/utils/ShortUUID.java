@@ -42,4 +42,8 @@ public class ShortUUID {
         return result;
     }
     
+    public static void main(String[] args) {
+        String shortUUID = generateShortUUID();
+        System.out.println("Short UUID: " + shortUUID);
+    }
 }

@@ -9,8 +9,9 @@
 
 ## Tasks remaining
 
-1. Add LoginServlet
-2. Add ProfileServlet and read all tweets of logged in user
-3. Add LogoutServlet
-4. Add TweetServlet
+1. Write a TweetModal saving, reading all tweets, findOne tweet, deleting tweet
+2. Write a FollowerModal for following and unfollowing
+3. Write a NotificationModal for creating notifications
+4. Add a WebFilter for authorizating protected routes, right now authorizing is completely done inside the servlet
+
 
