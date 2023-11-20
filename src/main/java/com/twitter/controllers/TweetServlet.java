@@ -4,7 +4,6 @@
  */
 package com.twitter.controllers;
 
-
 import com.twitter.models.Tweet;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -22,11 +21,10 @@ import javax.naming.NamingException;
  *
  * @author sudarshan
  */
-@WebServlet(name = "TweetServlet", urlPatterns = {"/tweet"})
+@WebServlet(name = "TweetServlet", urlPatterns = {"/tweet/:tweet_id"})
 public class TweetServlet extends HttpServlet {
-    private static final Logger logger = Logger.getLogger(TweetServlet.class.getName());
 
-    
+    private static final Logger logger = Logger.getLogger(TweetServlet.class.getName());
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -40,19 +38,34 @@ public class TweetServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+        HttpSession session = request.getSession();
+        Object email = session.getAttribute("email");
+
+        if (email == null) {
+            response.sendRedirect("/twitter/login");
+        } else {
+            String tweet_id = request.getParameter("tweet_id");
+            if (tweet_id != null) {
+                try {
+                    response.sendRedirect("/twitter/tweet");
+                } catch (SQLException | ClassNotFoundException | NamingException ex) {
+                    logger.severe(ex.getLocalizedMessage());
+                    request.setAttribute("message", ex.getMessage());
+                    request.getRequestDispatcher("./pages/404.jsp").forward(request, response);
+                }
+            }
+
+        }
     }
 
-    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         Object email = session.getAttribute("email");
-        if(email == null)
-        {
+        if (email == null) {
             response.sendRedirect("/twitter/login");
-        }else{
+        } else {
             try {
                 logger.log(Level.INFO, email.toString());
                 Tweet t = Tweet.createTweet((String) email, request.getParameter("tweet"));
@@ -61,12 +74,11 @@ public class TweetServlet extends HttpServlet {
                 logger.severe(ex.getLocalizedMessage());
                 request.setAttribute("message", ex.getMessage());
                 request.getRequestDispatcher("./pages/404.jsp").forward(request, response);
-            }   
-            
+            }
+
         }
     }
 
-    
     @Override
     public String getServletInfo() {
         return "Short description";

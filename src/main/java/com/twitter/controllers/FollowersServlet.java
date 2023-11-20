@@ -6,22 +6,25 @@ package com.twitter.controllers;
  */
 
 
-import jakarta.servlet.ServletException;
+import com.twitter.models.Follower;
+import com.twitter.models.User;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import jakarta.servlet.ServletException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import javax.naming.NamingException;
 
 /**
  *
  * @author sudarshan
  */
-@WebServlet(name = "FollowerssServlet", urlPatterns = {"/followers"})
+@WebServlet(name = "FollowersServlet", urlPatterns = {"/followers"})
 public class FollowersServlet extends HttpServlet {
 
     private static final Logger logger = Logger.getLogger(FollowersServlet.class.getName());
@@ -36,15 +39,7 @@ public class FollowersServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        Object email = session.getAttribute("email");
-        if(email == null){    
-            response.sendRedirect("/login");
-        }else{
-            logger.log(Level.INFO, email.toString());
-            request.setAttribute("title", "Followers");
-            request.getRequestDispatcher("./pages/followers.jsp").forward(request, response);       
-        }
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -59,7 +54,39 @@ public class FollowersServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        HttpSession session = request.getSession();
+        Object email = session.getAttribute("email");
+        if(email == null){    
+            response.sendRedirect("/twitter/login");
+        }else{
+            try{
+                
+                ArrayList<User> followers = Follower.getFollowers((String) email);
+                ArrayList<User> nonFollowers = User.findAll();
+                
+                nonFollowers.removeIf((User u) -> {
+                        return u.getEmail().equals(email);
+                });
+                
+                for(User follower: followers){
+                    nonFollowers.removeIf((User u) -> {
+                        return u.getEmail().equals(follower.getEmail());
+                    });
+                }
+                
+            
+                request.setAttribute("title", "Followers");
+                request.setAttribute("followers", followers);
+                request.setAttribute("nonfollowers", nonFollowers);
+                request.getRequestDispatcher("./pages/followers.jsp").forward(request, response);       
+
+            } catch (SQLException | ClassNotFoundException | NamingException ex) {
+                logger.severe(ex.getLocalizedMessage());
+                request.setAttribute("message", ex.getMessage());
+                request.getRequestDispatcher("./pages/404.jsp").forward(request, response);
+            }
+        }
+            
     }
 
     /**
@@ -73,7 +100,30 @@ public class FollowersServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        HttpSession session = request.getSession();
+        Object email = session.getAttribute("email");
+        String otherEmail = (String) request.getParameter("email");
+        String isFollowing = (String) request.getParameter("isFollowing");
+        if(email == null){
+            response.sendRedirect("/twitter/login");
+        }else{
+            try{
+                logger.info(otherEmail);
+                logger.info(isFollowing);
+                if("false".equals(isFollowing)){
+                    Follower.follow((String) email, otherEmail);
+                }else if("true".equals(isFollowing)){
+                    Follower.unFollow((String) email, otherEmail);
+                }
+                
+                response.sendRedirect("/twitter/followers");
+            } catch (SQLException | ClassNotFoundException | NamingException ex) {
+                logger.severe(ex.getLocalizedMessage());
+                request.setAttribute("message", ex.getMessage());
+                request.getRequestDispatcher("./pages/404.jsp").forward(request, response);
+            }
+        }
+        
     }
 
     /**

@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
 /**
@@ -102,5 +103,18 @@ public class User {
             
         }
         return new User(email,username);    
+    }
+    
+    public static ArrayList<User> findAll() throws SQLException, ClassNotFoundException, NamingException{
+        Connection db = DBConn.getConnection();
+        ArrayList<User> users = new ArrayList<>();
+        try (PreparedStatement st = db.prepareStatement("SELECT email, user_name FROM users")) {
+            
+            ResultSet results = st.executeQuery();
+            while(results.next()){
+                users.add(new User(results.getString(1), results.getString(2)));
+            }
+        }
+        return users;
     }
 }
