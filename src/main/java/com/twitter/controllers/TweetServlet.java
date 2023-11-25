@@ -4,6 +4,7 @@
  */
 package com.twitter.controllers;
 
+import com.twitter.models.Comment;
 import com.twitter.models.Tweet;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -13,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
@@ -21,7 +23,7 @@ import javax.naming.NamingException;
  *
  * @author sudarshan
  */
-@WebServlet(name = "TweetServlet", urlPatterns = {"/tweet/:tweet_id"})
+@WebServlet(name = "TweetServlet", urlPatterns = { "/tweet"})
 public class TweetServlet extends HttpServlet {
 
     private static final Logger logger = Logger.getLogger(TweetServlet.class.getName());
@@ -39,20 +41,41 @@ public class TweetServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        Object email = session.getAttribute("email");
-
+        String email = (String) session.getAttribute("email");
+        
         if (email == null) {
             response.sendRedirect("/twitter/login");
         } else {
-            String tweet_id = request.getParameter("tweet_id");
+            logger.log(Level.INFO, email);
+            
+            
+            String tweet_id = request.getParameter("tweet_id");;
+            logger.log(Level.INFO,tweet_id);
             if (tweet_id != null) {
                 try {
-                    response.sendRedirect("/twitter/tweet");
+                    Tweet twt = Tweet.findTweet(tweet_id);
+                    if(twt != null){
+                        
+                        ArrayList<Comment> comments = Comment.getCommentsByTweet(twt.getId());
+                        request.setAttribute("tweet", twt);
+                        request.setAttribute("comments", comments);                        
+                        logger.log(Level.INFO,twt.getContent());                        
+                        request.setAttribute("title", "Tweet");
+                        request.getRequestDispatcher("./pages/tweet.jsp").forward(request, response);
+                        
+                    }else{
+                        throw new SQLException(tweet_id + " don't exist");
+                    }
+                    
                 } catch (SQLException | ClassNotFoundException | NamingException ex) {
-                    logger.severe(ex.getLocalizedMessage());
+                    logger.log(Level.SEVERE,ex.getMessage());
+                    request.setAttribute("title", "404");
                     request.setAttribute("message", ex.getMessage());
                     request.getRequestDispatcher("./pages/404.jsp").forward(request, response);
                 }
+            }else{
+                request.setAttribute("message", "tweet don't exist");
+                request.getRequestDispatcher("./pages/404.jsp").forward(request, response);
             }
 
         }
@@ -63,19 +86,35 @@ public class TweetServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         Object email = session.getAttribute("email");
+        String method = request.getParameter("_method");
         if (email == null) {
             response.sendRedirect("/twitter/login");
-        } else {
+        } else if(method != null && method.equals("post")){
+
             try {
-                logger.log(Level.INFO, email.toString());
-                Tweet t = Tweet.createTweet((String) email, request.getParameter("tweet"));
-                response.sendRedirect("/twitter/profile");
+                
+                String content = request.getParameter("tweet");
+                Tweet t = Tweet.createTweet((String) email, content);
+                if(t == null){
+                    throw new SQLException("unable to create the tweet");
+                }
+                response.sendRedirect("/twitter/home");
             } catch (SQLException | ClassNotFoundException | NamingException ex) {
-                logger.severe(ex.getLocalizedMessage());
+                logger.log(Level.SEVERE, ex.getLocalizedMessage());
                 request.setAttribute("message", ex.getMessage());
-                request.getRequestDispatcher("./pages/404.jsp").forward(request, response);
+                request.getRequestDispatcher("./pages/400.jsp").forward(request, response);
             }
 
+        }else if(method != null && method.equals("delete")) {
+            try {    
+                String tweet_id = request.getParameter("tweet_id");
+                Tweet.deleteTweet(tweet_id);
+                response.sendRedirect("/twitter/profile");
+            } catch (SQLException | ClassNotFoundException | NamingException ex) {
+                logger.log(Level.SEVERE, ex.getLocalizedMessage());
+                request.setAttribute("message", ex.getMessage());
+                request.getRequestDispatcher("./pages/400.jsp").forward(request, response);
+            }
         }
     }
 

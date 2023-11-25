@@ -23,7 +23,10 @@
                 <button class="border-2 rounded-full px-2 cursor-pointer">x</button>
             </div>
             <div class="flex flex-col items-center justify-center w-full border-b-4 py-2 space-y-2">
-                <img src="./static/images/profile-img.jpg" alt="" class="w-32 h-32 rounded-full overflow-hidden object-cover">
+                <img alt="profile-image" 
+                     class="w-32 h-32 rounded-full overflow-hidden object-cover"
+                     src=<%=(String)session.getAttribute("profile_image")%>
+                     >
                 <span class="block">
                     <%=session.getAttribute("username")%>
                 </span>
@@ -36,14 +39,16 @@
                 %>
                 <div class="flex flex-col items-left justify-between text-sm  border-b-2">
                     
-                    <p class="p-2 text-sm text-left">
+                    <a href=<%="/twitter/tweet?tweet_id="+tweet.getId()%> >
+                        <p class="p-2 text-sm text-left">
                             <%
                                 out.print(tweet.getContent());
                             %>
                         </p>
+                    </a>
                     
                     <div class="flex flex-row justify-between w-full px-2">
-                        <a class="rounded-full w-full cursor-pointer" href=<%="/twitter/tweet/"+tweet.getId()%>>
+                        <a class="rounded-full w-full cursor-pointer" href=<%="/twitter/tweet/"+tweet.getId()%> >
                             <img src="./static/images/comment.png" alt="comment" class="rounded-full w-8 h-10 object-contain">
                         </a>
                         <time class="block" datetime=<%=tweet.getDate().toString()%> >

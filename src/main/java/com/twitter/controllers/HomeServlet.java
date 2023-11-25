@@ -32,7 +32,9 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        logger.info(request.getContextPath());
+        logger.info(request.getServletContext().getRealPath("static/images"));
+        
         HttpSession session = request.getSession();
         Object email = session.getAttribute("email");
         if (email == null) {
@@ -41,9 +43,10 @@ public class HomeServlet extends HttpServlet {
             try {
                 logger.log(Level.INFO, email.toString());
                 
-                ArrayList<Tweet> tweets = Tweet.getTweets((String) email);
+                ArrayList<Tweet> tweets = Tweet.getAllTweets();
                 request.setAttribute("title", "Home");
                 request.setAttribute("tweets", tweets);
+                
                 request.getRequestDispatcher("./pages/home.jsp").forward(request, response);
             } catch (SQLException | ClassNotFoundException | NamingException ex) {
                 logger.severe(ex.getLocalizedMessage());

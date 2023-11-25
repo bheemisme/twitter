@@ -4,32 +4,46 @@
  */
 package com.twitter.controllers;
 
-import com.twitter.models.Tweet;
 import java.io.IOException;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpSession;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.naming.NamingException;
 
 /**
  *
  * @author sudarshan
  */
-@WebServlet(name = "ProfileServlet", urlPatterns = {"/profile"})
-public class ProfileServlet extends HttpServlet {
+@WebServlet(name = "LogoutServlet", urlPatterns = {"/logout"})
+public class LogoutServlet extends HttpServlet {
 
-    private static final Logger logger = Logger.getLogger(HomeServlet.class.getName());
-
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, SQLException {
-
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet LogoutServlet</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet LogoutServlet at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -44,24 +58,11 @@ public class ProfileServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            HttpSession session = request.getSession();
-            Object email = session.getAttribute("email");
-            if (email == null) {
-                response.sendRedirect("/twitter/login");
-            } else {
-                logger.log(Level.INFO, email.toString());
-                ArrayList<Tweet> tweets = Tweet.getTweets((String) email);
-                request.setAttribute("title", "Profile");
-                request.setAttribute("tweets", tweets);
-                request.getRequestDispatcher("./pages/profile.jsp").forward(request, response);
-                logger.log(Level.INFO, tweets.get(0).getContent());
-            }
-        } catch (SQLException | ClassNotFoundException | NamingException ex) {
-            logger.severe(ex.getLocalizedMessage());
-            request.setAttribute("message", ex.getMessage());
-            request.getRequestDispatcher("./pages/404.jsp").forward(request, response);
-        }
+        HttpSession session = request.getSession();
+        session.setAttribute("email", null);
+        session.setAttribute("username", null);
+        session.setAttribute("profile_image", null);
+        response.sendRedirect("/twitter/login");
     }
 
     /**
@@ -75,7 +76,7 @@ public class ProfileServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+        processRequest(request, response);
     }
 
     /**
