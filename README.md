@@ -10,12 +10,9 @@
  
 ## Tasks remaining
 
-1. Write a TweetModal saving, reading all tweets, findOne tweet, deleting tweet
-2. Write a FollowerModal for following and unfollowing
-3. Write a NotificationModal for creating notifications
-4. Add a WebFilter for authorizating protected routes, right now authorizing is completely done inside the servlet
-5. Password hashing has to be implemented
-6. Error flags should appear in jsp
+1. send Notifications and render them in jsp
+2. Add a WebFilter for authorizating protected routes, right now authorizing is completely done inside the servlet
+3. Error flags should appear in jsp
 
 ## Project structure
 
@@ -54,6 +51,7 @@
 	- commenting on other tweets
 	- deleting his/her comments
 	- Following and unfollowing other users
+        - reading notifications
 
 4. Application will perform following actions
 	
