@@ -66,7 +66,8 @@ public class Notification {
                 content,
                 LocalDateTime.now()
         );
-        try (PreparedStatement st = db.prepareStatement("INSERT INTO comments (id, content, email, tweet_id, creation_time) VALUES (?, ?, ?, ?, ?)")) {
+        try (PreparedStatement st = db.prepareStatement(
+                "INSERT INTO notifications (id, content, email, tweet_id, creation_time) VALUES (?, ?, ?, ?, ?)")) {
             st.setString(1, n.getId());
             st.setString(2, n.getContent());
             st.setString(3, n.getEmail());
@@ -95,9 +96,9 @@ public class Notification {
             while (results.next()) {
                 notifications.add(new Notification(
                         results.getString("id"),
-                        results.getString("content"),
-                        results.getString("email"),
                         results.getString("tweet_id"),
+                        results.getString("email"),
+                        results.getString("content"),
                         LocalDateTime.parse(results.getString("creation_time"))
                 ));
             }

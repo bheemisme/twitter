@@ -185,11 +185,17 @@ public class User {
     public static ArrayList<User> findAll() throws SQLException, ClassNotFoundException, NamingException {
         Connection db = DBConn.getConnection();
         ArrayList<User> users = new ArrayList<>();
-        try (PreparedStatement st = db.prepareStatement("SELECT email, username, profile_image FROM users")) {
+        try (PreparedStatement st = db.prepareStatement("SELECT * FROM users")) {
 
             ResultSet results = st.executeQuery();
             while (results.next()) {
-                users.add(new User(results.getString("email"), results.getString("username"), results.getString("profile_image")));
+                users.add(
+                        new User(results.getString("id"),
+                                results.getString("email"),
+                                results.getString("username"),
+                                results.getString("password"),
+                                results.getString("profile_image"))
+                );
             }
         }
         return users;
@@ -216,7 +222,7 @@ public class User {
                 db.commit();
                 return true;
             }
-        }catch(IOException ex){
+        } catch (IOException ex) {
             logger.info("image file problem");
             logger.info(ex.getMessage());
         } finally {

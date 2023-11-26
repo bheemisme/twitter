@@ -5,7 +5,10 @@
 package com.twitter.controllers;
 
 import com.twitter.models.Comment;
+import com.twitter.models.Follower;
+import com.twitter.models.Notification;
 import com.twitter.models.Tweet;
+import com.twitter.models.User;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -47,8 +50,6 @@ public class TweetServlet extends HttpServlet {
             response.sendRedirect("/twitter/login");
         } else {
             logger.log(Level.INFO, email);
-            
-            
             String tweet_id = request.getParameter("tweet_id");;
             logger.log(Level.INFO,tweet_id);
             if (tweet_id != null) {
@@ -85,7 +86,7 @@ public class TweetServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        Object email = session.getAttribute("email");
+        String email = (String) session.getAttribute("email");
         String method = request.getParameter("_method");
         if (email == null) {
             response.sendRedirect("/twitter/login");
@@ -94,7 +95,12 @@ public class TweetServlet extends HttpServlet {
             try {
                 
                 String content = request.getParameter("tweet");
-                Tweet t = Tweet.createTweet((String) email, content);
+                Tweet t = Tweet.createTweet(email, content);
+                
+                for(User user: Follower.getFollowers(email)) {
+                    logger.info(user.getEmail());
+                    Notification.createNotification(user.getEmail(), t.getId(), "You got a tweet <i>" +  t.getContent().substring(0, 30) + "...</i>");
+                }
                 if(t == null){
                     throw new SQLException("unable to create the tweet");
                 }

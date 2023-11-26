@@ -20,7 +20,10 @@
                   >
                 <input hidden name="_method" value="post" />
                 <div class="flex flex-row h-20 p-4">
-                    <img  class="w-10 h-10  object-cover rounded-full" alt="profile-image" src=<%=(String)session.getAttribute("profile_image")%> >
+                    <a href="/twitter/profile" >
+                        <img  class="w-10 h-10  object-cover rounded-full" alt="profile-image" 
+                              src=<%=(String)session.getAttribute("profile_image")%>>
+                    </a>
                     <textarea placeholder="Tweet any thing"
                               name="tweet"
                               cols="30"
@@ -39,40 +42,40 @@
                                 <button class="border-2 rounded-full px-2 cursor-pointer">x</button>
                             </div>-->
             <div class="flex flex-col w-full">
-            <%
-                    ArrayList<Tweet> tweets = (ArrayList<Tweet>) request.getAttribute("tweets");
-                    if(tweets != null){
-                    for(Tweet tweet: tweets){                 
+                <%
+                        ArrayList<Tweet> tweets = (ArrayList<Tweet>) request.getAttribute("tweets");
+                        if(tweets != null){
+                        for(Tweet tweet: tweets){                 
                 %>
-            <div class="flex flex-col items-center justify-between text-sm  border-b-2 space-y-4 px-4">
+                <div class="flex flex-col items-center justify-between text-sm  border-b-2 space-y-4 px-4">
 
-                <div class="flex flex-row  mt-4 px-2 items-start w-full space-x-4">
-                    <a href="/twitter/profile" >
-                        <img src="./static/images/profile-img.jpg" class="w-10 h-10 rounded-full object-cover " alt="">
- 
-                    </a>
-                    <a href=<%="/twitter/tweet?tweet_id="+tweet.getId()%> >
-                    <p class=" text-sm">
-                        <% 
-                            out.println(tweet.getContent());
-                        %>
-                    </p>
-                    </a>
+                    <div class="flex flex-row  mt-4 px-2 items-start w-full space-x-4">
+                        <a href=<%="/twitter/profile?user_email="+tweet.getEmail()%> >
+                            <img  class="w-10 h-10 rounded-full object-cover " alt="profile-image" src=<%=tweet.getUserProfileImage()%>>
+
+                        </a>
+                        <a href=<%="/twitter/tweet?tweet_id="+tweet.getId()%> >
+                            <p class=" text-sm">
+                                <% 
+                                    out.println(tweet.getContent());
+                                %>
+                            </p>
+                        </a>
+                    </div>
+                    <div class="flex flex-row justify-between w-full px-2">
+                        <a class="rounded-full w-full cursor-pointer" href="#" >
+                            <img src="./static/images/comment.png" alt="comment" class="rounded-full w-8 h-10 object-contain">
+                        </a>
+                        <time class="block" datetime=<%=tweet.getDate().toString()%> >
+                            <%
+                                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy HH:mm");
+                                String formattedDateTime = tweet.getDate().format(formatter);
+                                out.println(formattedDateTime);
+                            %>
+                        </time>
+                    </div>
                 </div>
-                <div class="flex flex-row justify-between w-full px-2">
-                    <a class="rounded-full w-full cursor-pointer" href="#" >
-                        <img src="./static/images/comment.png" alt="comment" class="rounded-full w-8 h-10 object-contain">
-                    </a>
-                    <time class="block" datetime=<%=tweet.getDate().toString()%> >
-                        <%
-                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy HH:mm");
-                            String formattedDateTime = tweet.getDate().format(formatter);
-                            out.println(formattedDateTime);
-                        %>
-                    </time>
-                </div>
-            </div>
-            <%}}%>
+                <%}}%>
             </div>
         </div>
     </body>

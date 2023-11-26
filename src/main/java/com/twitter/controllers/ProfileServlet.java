@@ -5,6 +5,7 @@
 package com.twitter.controllers;
 
 import com.twitter.models.Tweet;
+import com.twitter.models.User;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -46,16 +47,29 @@ public class ProfileServlet extends HttpServlet {
             throws ServletException, IOException {
         try {
             HttpSession session = request.getSession();
-            Object email = session.getAttribute("email");
+            String email = (String) session.getAttribute("email");
             if (email == null) {
                 response.sendRedirect("/twitter/login");
             } else {
-                logger.log(Level.INFO, email.toString());
-                ArrayList<Tweet> tweets = Tweet.getTweets((String) email);
-                request.setAttribute("title", "Profile");
-                request.setAttribute("tweets", tweets);
-                request.getRequestDispatcher("./pages/profile.jsp").forward(request, response);
-                logger.log(Level.INFO, tweets.get(0).getContent());
+                String user_email = request.getParameter("user_email");
+                if (user_email == null) {
+                    User u = User.find(email);
+                    ArrayList<Tweet> tweets = Tweet.getTweets(email);
+                    
+                    request.setAttribute("user", u);
+                    request.setAttribute("title", "Profile");
+                    request.setAttribute("tweets", tweets);
+                    request.getRequestDispatcher("./pages/profile.jsp").forward(request, response);
+                }else{
+                    User u = User.find(user_email);
+                    ArrayList<Tweet> tweets = Tweet.getTweets(user_email);
+                    
+                    request.setAttribute("user", u);
+                    request.setAttribute("title", "Profile");
+                    request.setAttribute("tweets", tweets);
+                    request.getRequestDispatcher("./pages/profile.jsp").forward(request, response);
+                }
+
             }
         } catch (SQLException | ClassNotFoundException | NamingException ex) {
             logger.severe(ex.getLocalizedMessage());
@@ -75,7 +89,7 @@ public class ProfileServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
     }
 
     /**

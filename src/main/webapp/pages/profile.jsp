@@ -2,6 +2,7 @@
 <%@ page import = "java.util.ArrayList" %>
 <%@ page import = "java.time.format.DateTimeFormatter" %>
 <%@ page import = "com.twitter.models.Tweet" %>
+<%@ page import = "com.twitter.models.User" %>
 <!doctype html>
 <html>
 
@@ -22,13 +23,14 @@
                 <p class="">errors flags should appear here</p>
                 <button class="border-2 rounded-full px-2 cursor-pointer">x</button>
             </div>
+            <% User u = (User) request.getAttribute("user"); %>
             <div class="flex flex-col items-center justify-center w-full border-b-4 py-2 space-y-2">
                 <img alt="profile-image" 
                      class="w-32 h-32 rounded-full overflow-hidden object-cover"
-                     src=<%=(String)session.getAttribute("profile_image")%>
+                     src=<%=(String)u.getProfileImage()%>
                      >
                 <span class="block">
-                    <%=session.getAttribute("username")%>
+                    <%=(String)u.getUsername()%>
                 </span>
             </div>
             <div class="w-full px-2 py-4">

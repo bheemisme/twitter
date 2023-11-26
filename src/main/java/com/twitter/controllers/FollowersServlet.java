@@ -55,29 +55,18 @@ public class FollowersServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        Object email = session.getAttribute("email");
+        String email = (String) session.getAttribute("email");
         if(email == null){    
             response.sendRedirect("/twitter/login");
         }else{
             try{
                 
-                ArrayList<User> followers = Follower.getFollowers((String) email);
-                ArrayList<User> nonFollowers = User.findAll();
+                ArrayList<User> followingUsers = Follower.getFollowingUsers(email);
+                ArrayList<User> nonFollowingUsers = Follower.getNonFollowingUsers(email);
                 
-                nonFollowers.removeIf((User u) -> {
-                        return u.getEmail().equals(email);
-                });
-                
-                for(User follower: followers){
-                    nonFollowers.removeIf((User u) -> {
-                        return u.getEmail().equals(follower.getEmail());
-                    });
-                }
-                
-            
                 request.setAttribute("title", "Followers");
-                request.setAttribute("followers", followers);
-                request.setAttribute("nonfollowers", nonFollowers);
+                request.setAttribute("followingUsers", followingUsers);
+                request.setAttribute("nonFollowingUsers", nonFollowingUsers);
                 request.getRequestDispatcher("./pages/followers.jsp").forward(request, response);       
 
             } catch (SQLException | ClassNotFoundException | NamingException ex) {

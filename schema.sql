@@ -17,7 +17,8 @@ CREATE TABLE "users" (
 CREATE TABLE "followers" (
     id integer primary key autoincrement,
     email text not null,
-    follower text not null,
+    following text not null,
+    foreign key(following) references users(email),
     foreign key(email) references users(email)
 );
 

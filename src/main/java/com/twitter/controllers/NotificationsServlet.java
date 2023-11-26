@@ -4,6 +4,7 @@
  */
 package com.twitter.controllers;
 
+import com.twitter.models.Notification;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -13,9 +14,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.naming.NamingException;
 
 /**
  *
@@ -24,7 +28,8 @@ import java.util.logging.Logger;
 @WebServlet(name = "NotificationsServlet", urlPatterns = {"/notifications"})
 public class NotificationsServlet extends HttpServlet {
 
-     private static final Logger logger = Logger.getLogger(NotificationsServlet.class.getName());
+    private static final Logger logger = Logger.getLogger(NotificationsServlet.class.getName());
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -36,16 +41,8 @@ public class NotificationsServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        Object email = session.getAttribute("email");
-        if(email == null){    
-            response.sendRedirect("/twitter/login");
-        }else{
-            logger.log(Level.INFO, email.toString());
-            request.setAttribute("title", "Notifications");
-            request.getRequestDispatcher("./pages/notifications.jsp").forward(request, response);       
-        }
         
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -60,7 +57,23 @@ public class NotificationsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        HttpSession session = request.getSession();
+        String email = (String) session.getAttribute("email");
+        if (email == null) {
+            response.sendRedirect("/twitter/login");
+        } else {
+            try {
+                logger.log(Level.INFO, email);
+                ArrayList<Notification> notifications = Notification.getNotificationsByEmail(email);
+                request.setAttribute("notifications", notifications);
+                request.setAttribute("title", "Notifications");
+                request.getRequestDispatcher("./pages/notifications.jsp").forward(request, response);
+            } catch (SQLException | NamingException | ClassNotFoundException ex) {
+                logger.severe(ex.getLocalizedMessage());
+                request.setAttribute("message", ex.getMessage());
+                request.getRequestDispatcher("./pages/404.jsp").forward(request, response);
+            }
+        }
     }
 
     /**
@@ -74,7 +87,7 @@ public class NotificationsServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        
     }
 
     /**

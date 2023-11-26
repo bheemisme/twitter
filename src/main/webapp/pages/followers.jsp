@@ -18,15 +18,15 @@
             <div class="w-full flex flex-col border-b-4 px-4">
                 <h2 class="text-gray-600 text-lg mb-4">People You May Know</h2>
                 <%
-                    ArrayList<User> nonFollowers = (ArrayList<User>) request.getAttribute("nonfollowers");
-                    if(nonFollowers != null){
-                        for(User user: nonFollowers){          
+                    ArrayList<User> nonFollowingUsers = (ArrayList<User>) request.getAttribute("nonFollowingUsers");
+                    if(nonFollowingUsers != null){
+                        for(User user: nonFollowingUsers){          
                 %>
                 <form method="post" class="flex flex-row border-b-2 p-2 justify-between w-full" action="/twitter/followers">
                     <div class="space-x-2 text-gray-600">
                         <img src="./static/images/profile-img.jpg" alt="follower"
                              class="w-10 h-10 inline rounded-full object-cover">
-                        <span><%=user.getUsername()%></span>
+                        <span><%=user.getUsername()%> </span>
                         <input hidden name="email" value=<%=user.getEmail()%> />
                         <input hidden name="isFollowing" value="false" />
                     </div>
@@ -37,11 +37,11 @@
                 %>
             </div>
             <div class="w-full flex flex-col border-b-4 px-4">
-                <h2 class="text-gray-600 text-lg mb-4">Your followers</h2>
+                <h2 class="text-gray-600 text-lg mb-4">Users you follow</h2>
                 <%
-                    ArrayList<User> followers = (ArrayList<User>) request.getAttribute("followers");
-                    if(followers != null){
-                        for(User user: followers){          
+                    ArrayList<User> followingUsers = (ArrayList<User>) request.getAttribute("followingUsers");
+                    if(followingUsers != null){
+                        for(User user: followingUsers){          
                 %>
                 <form method="post" class="flex flex-row border-b-2 p-2 justify-between w-full" action="/twitter/followers">
                     <div class="space-x-2 text-gray-600">

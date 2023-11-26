@@ -43,7 +43,7 @@ public class HomeServlet extends HttpServlet {
             try {
                 logger.log(Level.INFO, email.toString());
                 
-                ArrayList<Tweet> tweets = Tweet.getAllTweets();
+                ArrayList<Tweet> tweets = Tweet.getAllTweetsWithImages();
                 request.setAttribute("title", "Home");
                 request.setAttribute("tweets", tweets);
                 

@@ -59,6 +59,10 @@ public class Tweet {
         return this.content;
     }
     
+    public String getUserProfileImage(){
+        return this.user_profile_image;
+    }
+    
     public static Tweet createTweet(String email, String content)
             throws SQLException, ClassNotFoundException, NamingException {
         
@@ -116,6 +120,7 @@ public class Tweet {
                         results.getString("email"),
                         LocalDateTime.parse(results.getString("creation_time")),
                         results.getString("content")
+                        
                 ));
             }
             return tweets;
@@ -126,7 +131,7 @@ public class Tweet {
     public static ArrayList<Tweet> getAllTweetsWithImages() throws SQLException, ClassNotFoundException, NamingException {
         Connection db = DBConn.getConnection();
         logger.info("connection established with DB");
-        String query = "SELECT tweets.id, tweets.email, tweets.date, tweets.content, users.profile_image FROM tweets JOIN users on tweets.email = users.email";
+        String query = "SELECT tweets.id, tweets.email, tweets.creation_time, tweets.content, users.profile_image FROM tweets JOIN users on tweets.email = users.email";
         ArrayList<Tweet> tweets = new ArrayList<>();
         try (PreparedStatement st = db.prepareStatement(query)) {
             
