@@ -15,6 +15,7 @@
                         <p class="">errors flags should appear here</p>
                         <button class="border-2 rounded-full px-2 cursor-pointer">x</button>
                     </div>-->
+            
             <div class="w-full flex flex-col border-b-4 px-4">
                 <h2 class="text-gray-600 text-lg mb-4">People You May Know</h2>
                 <%
@@ -24,8 +25,12 @@
                 %>
                 <form method="post" class="flex flex-row border-b-2 p-2 justify-between w-full" action="/twitter/followers">
                     <div class="space-x-2 text-gray-600">
-                        <img src="./static/images/profile-img.jpg" alt="follower"
-                             class="w-10 h-10 inline rounded-full object-cover">
+                        <a href=<%="/twitter/profile?user_email="+user.getEmail()%> >
+                            <img alt="follower"
+                                 class="w-10 h-10 inline rounded-full object-cover"
+                                 src=<%=user.getProfileImage()%>
+                                 >
+                        </a>
                         <span><%=user.getUsername()%> </span>
                         <input hidden name="email" value=<%=user.getEmail()%> />
                         <input hidden name="isFollowing" value="false" />
@@ -45,8 +50,12 @@
                 %>
                 <form method="post" class="flex flex-row border-b-2 p-2 justify-between w-full" action="/twitter/followers">
                     <div class="space-x-2 text-gray-600">
-                        <img src="./static/images/profile-img.jpg" alt="follower"
-                             class="w-10 h-10 inline rounded-full object-cover">
+                        <a href=<%="/twitter/profile?user_email="+user.getEmail()%> >
+                            <img  alt="follower"
+                                  class="w-10 h-10 inline rounded-full object-cover"
+                                  src=<%=user.getProfileImage()%>
+                                  >
+                        </a>
                         <span><%=user.getUsername()%></span>
                         <input hidden class="hidden" name="email" value=<%=user.getEmail()%> />
                         <input hidden class="hidden" name="isFollowing" value="true" />
@@ -57,7 +66,7 @@
                 <%
                     }}
                 %>
-                
+
             </div>
         </div>
     </body>

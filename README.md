@@ -10,9 +10,8 @@
  
 ## Tasks remaining
 
-1. send Notifications and render them in jsp
-2. Add a WebFilter for authorizating protected routes, right now authorizing is completely done inside the servlet
-3. Error flags should appear in jsp
+1. Add a WebFilter for authorizating protected routes, right now authorizing is completely done inside the servlet
+2. Error flags should appear in jsp
 
 ## Project structure
 
