@@ -68,6 +68,30 @@
                 %>
 
             </div>
+            <div class="w-full flex flex-col border-b-4 px-4">
+                <h2 class="text-gray-600 text-lg mb-4">Your followers</h2>
+                <%
+                    ArrayList<User> followers = (ArrayList<User>) request.getAttribute("followers");
+                    if(followers != null){
+                        for(User user: followers){          
+                %>
+                <div class="flex flex-row border-b-2 p-2 justify-between w-full" action="/twitter/followers">
+                    <div class="space-x-2 text-gray-600">
+                        <a href=<%="/twitter/profile?user_email="+user.getEmail()%> >
+                            <img  alt="follower"
+                                  class="w-10 h-10 inline rounded-full object-cover"
+                                  src=<%=user.getProfileImage()%>
+                                  >
+                        </a>
+                        <span><%=user.getUsername()%></span>
+                    </div>
+                    
+                </form>
+                <%
+                    }}
+                %>
+
+            </div>
         </div>
     </body>
 

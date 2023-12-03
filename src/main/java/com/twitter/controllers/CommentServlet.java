@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpSession;
 import com.twitter.models.Comment;
+import com.twitter.models.Notification;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -89,13 +90,17 @@ public class CommentServlet extends HttpServlet {
             try {
                 String content = request.getParameter("comment");
                 String tweet_id = request.getParameter("tweet_id");
-
+                Tweet t = Tweet.findTweet(tweet_id);
                 Comment c = Comment.createComment(content, tweet_id, email);
                 if (c == null) {
                     logger.log(Level.INFO, "comment is null");
                 } else {
                     logger.log(Level.INFO, c.toString());
                 }
+                if(!t.getEmail().equals(email)){
+                    Notification.createNotification(t.getEmail(), tweet_id, "You got a comment <i>"+content.substring(0, 10)+"</i>");
+                }
+                
 
                 response.sendRedirect("/twitter/tweet?tweet_id=" + tweet_id);
 

@@ -50,7 +50,7 @@
                     </a>
                     
                     <div class="flex flex-row justify-between w-full px-2">
-                        <a class="rounded-full w-full cursor-pointer" href=<%="/twitter/tweet/"+tweet.getId()%> >
+                        <a class="rounded-full w-full cursor-pointer" href=<%="/twitter/tweet?tweet_id="+tweet.getId()%> >
                             <img src="./static/images/comment.png" alt="comment" class="rounded-full w-8 h-10 object-contain">
                         </a>
                         <time class="block" datetime=<%=tweet.getDate().toString()%> >

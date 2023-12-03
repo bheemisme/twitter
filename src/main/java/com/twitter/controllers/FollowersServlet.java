@@ -63,10 +63,12 @@ public class FollowersServlet extends HttpServlet {
                 
                 ArrayList<User> followingUsers = Follower.getFollowingUsers(email);
                 ArrayList<User> nonFollowingUsers = Follower.getNonFollowingUsers(email);
+                ArrayList<User> followers = Follower.getFollowers(email);
                 
                 request.setAttribute("title", "Followers");
                 request.setAttribute("followingUsers", followingUsers);
                 request.setAttribute("nonFollowingUsers", nonFollowingUsers);
+                request.setAttribute("followers", followers);
                 request.getRequestDispatcher("./pages/followers.jsp").forward(request, response);       
 
             } catch (SQLException | ClassNotFoundException | NamingException ex) {

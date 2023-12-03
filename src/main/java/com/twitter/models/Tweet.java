@@ -153,7 +153,7 @@ public class Tweet {
     public static Tweet findTweet(String tweet_id) throws SQLException, ClassNotFoundException, NamingException {
         Connection db = DBConn.getConnection();
         logger.info("connection established with DB");
-        String query = "SELECT * FROM tweets WHERE id = ?";
+        String query = "SELECT tweets.id, tweets.email, tweets.creation_time, tweets.content, users.profile_image FROM tweets JOIN users on tweets.email = users.email WHERE tweets.id=?";
         
         try (PreparedStatement st = db.prepareStatement(query)) {
             st.setString(1, tweet_id);
@@ -163,7 +163,9 @@ public class Tweet {
                         results.getString("id"),
                         results.getString("email"),
                         LocalDateTime.parse(results.getString("creation_time")),
-                        results.getString("content"));
+                        results.getString("content"),
+                        results.getString("profile_image")
+                );
             }
             
         }

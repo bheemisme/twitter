@@ -4,6 +4,7 @@
 <%@ page import = "java.util.ArrayList" %>
 <%@ page import = "com.twitter.models.Tweet" %>
 <%@ page import = "com.twitter.models.Comment" %>
+<%@ page import = "com.twitter.models.User" %>
 <!doctype html>
 <html>
 
@@ -15,6 +16,7 @@
         <%
             Tweet tweet = (Tweet) request.getAttribute("tweet");
             String email = (String) session.getAttribute("email");
+            String profile_image = (String) session.getAttribute("profile_image");
             
             ArrayList<Comment> comments = (ArrayList<Comment>) request.getAttribute("comments");
             if(tweet != null && email != null){         
@@ -28,7 +30,7 @@
             <div class="flex flex-col items-center justify-between text-sm  border-b-2 p-4">
 
                 <div class="flex flex-row  mt-4 px-2 items-start w-full space-x-4">
-                    <img src="./static/images/profile-img.jpg" class="w-10 h-10 rounded-full object-cover " alt="">
+                    <img class="w-10 h-10 rounded-full object-cover " alt="tweet-owner" src=<%=tweet.getUserProfileImage()%> >
                     <div class="flex flex-col space-y-4 w-full">
 
                         <p class=" text-sm">
@@ -65,7 +67,7 @@
             <form method="post" action="/twitter/comment" class="flex flex-col justify-between text-sm  border-b-4 w-full p-2 space-y-4">
                 <input hidden name="_method" value="post" />
                 <div class="flex flex-row h-20 p-4">
-                    <img src="./static/images/profile-img.jpg" class="w-10 h-10  object-cover rounded-full" alt="">
+                    <img class="w-10 h-10  object-cover rounded-full" alt="" src=<%=profile_image%> >
                     <textarea placeholder="Please comment"
                               name="comment"
                               cols="30"
@@ -79,14 +81,16 @@
                     </button>
                 </div>
             </form>
-            <div class="flex flex-col space-y-4 px-4 pb-6">
+            <div class="flex flex-col space-y-4 items-start px-4">
                 <%
                     for(Comment comment: comments){
                 %>
-                <div class="flex flex-row  mt-4 px-2 items-start w-full space-x-4">
-                    <img src="./static/images/profile-img.jpg" class="w-10 h-10 rounded-full object-cover " alt="">
+                <div class="flex flex-row  mt-4 items-center w-full border-b-2">
+                    <a class="" href=<%="/twitter/profile?user_email="+comment.getEmail()%> >
+                        <img  class="w-10 h-10 rounded-full object-cover " alt="comment-profile-image" src=<%=comment.getProfileImage()%>
+                    </a>
 
-                    <div class="flex flex-row justify-between w-full">
+                    <div class="flex flex-row justify-between w-full space-x-4">
                         <p class=" text-sm">
                             <%
                                 out.println(comment.getContent());
@@ -101,7 +105,9 @@
                             <input hidden type="text" name="comment_id" value=<%=comment.getId()%> />
                             <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded-xl text-sm">Delete</button>
                         </form>
-                        <%}%>
+                        <%
+                            }
+                        %>
                     </div>
                 </div>
                 <%
