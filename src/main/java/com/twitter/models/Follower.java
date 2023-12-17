@@ -16,7 +16,7 @@ import javax.naming.NamingException;
 
 /**
  *
- * @author sudarshan
+ * @author nobal narayanan
  */
 public class Follower {
 

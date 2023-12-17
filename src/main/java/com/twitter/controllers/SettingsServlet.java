@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author sudarshan
+ * @author rohit kumar
  */
 @WebServlet(name = "SettingsServlet", urlPatterns = {"/settings"})
 public class SettingsServlet extends HttpServlet {

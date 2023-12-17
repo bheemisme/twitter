@@ -22,7 +22,7 @@ import javax.naming.NamingException;
 
 /**
  *
- * @author sudarshan
+ * @author nobal narayanan
  */
 @WebServlet(name = "FollowersServlet", urlPatterns = {"/followers"})
 public class FollowersServlet extends HttpServlet {

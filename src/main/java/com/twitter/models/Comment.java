@@ -17,7 +17,7 @@ import javax.naming.NamingException;
 
 /**
  *
- * @author sudarshan
+ * @author rohit kumar
  */
 public class Comment {
 

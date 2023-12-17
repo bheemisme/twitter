@@ -24,7 +24,7 @@ import javax.naming.NamingException;
 
 /**
  *
- * @author sudarshan
+ * @author ram shankar
  */
 @WebServlet(name = "TweetServlet", urlPatterns = { "/tweet"})
 public class TweetServlet extends HttpServlet {

@@ -1,4 +1,10 @@
-<%@ page isErrorPage="true" %>
+<%-- 
+    Document   : 404
+    Created on : Nov 12, 2023, 10:16:45 AM
+    Author     : sudarshan
+--%>
+<%@ page isErrorPage="true" contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8" %>
 
 <!doctype html>
 <html>

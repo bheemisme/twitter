@@ -31,7 +31,7 @@ import javax.naming.NamingException;
 
 /**
  *
- * @author sudarshan
+ * @author rohit
  */
 @WebServlet(name = "EditProfileServlet", urlPatterns = {"/edit"})
 @MultipartConfig
