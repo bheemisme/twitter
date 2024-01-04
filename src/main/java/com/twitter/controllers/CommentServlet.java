@@ -98,7 +98,13 @@ public class CommentServlet extends HttpServlet {
                     logger.log(Level.INFO, c.toString());
                 }
                 if(!t.getEmail().equals(email)){
-                    Notification.createNotification(t.getEmail(), tweet_id, "You got a comment <i>"+content.substring(0, 10)+"</i>");
+                    String notifString;
+                    if(content.length() < 10){
+                        notifString = content;
+                    }else{
+                        notifString = content.substring(0,10);
+                    }
+                    Notification.createNotification(t.getEmail(), tweet_id, "You got a comment from <i>"+notifString+"</i>");
                 }
                 
 

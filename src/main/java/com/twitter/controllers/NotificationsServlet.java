@@ -23,7 +23,7 @@ import javax.naming.NamingException;
 
 /**
  *
- * @author bharathi
+ * @author sudarashan
  */
 @WebServlet(name = "NotificationsServlet", urlPatterns = {"/notifications"})
 public class NotificationsServlet extends HttpServlet {

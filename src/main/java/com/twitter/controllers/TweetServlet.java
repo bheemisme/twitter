@@ -93,13 +93,18 @@ public class TweetServlet extends HttpServlet {
         } else if(method != null && method.equals("post")){
 
             try {
-                
                 String content = request.getParameter("tweet");
                 Tweet t = Tweet.createTweet(email, content);
                 
                 for(User user: Follower.getFollowers(email)) {
                     logger.info(user.getEmail());
-                    Notification.createNotification(user.getEmail(), t.getId(), "You got a tweet <i>" +  t.getContent().substring(0, 30) + "...</i>");
+                    String notifString;
+                    if(content.length() < 30){
+                        notifString = content;
+                    }else{
+                        notifString = content.substring(0,30);
+                    }
+                    Notification.createNotification(user.getEmail(), t.getId(), "You got a tweet </i>" + notifString+ "...</i>");
                 }
                 if(t == null){
                     throw new SQLException("unable to create the tweet");

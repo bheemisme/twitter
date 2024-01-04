@@ -1,7 +1,7 @@
 <%-- 
     Document   : login
     Created on : Nov 12, 2023, 10:16:45 AM
-    Author     : bharathi
+    Author     : rohitt kumar
 --%>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -19,7 +19,7 @@
 
 <body class="h-screen flex flex-col items-center justify-center space-y-4 p-4">
     <h1 class="text-blue-400 text-xl underline cursor-default">Login</h1>
-    <form action="#" method="post" class="flex flex-col items-center justify-center space-y-4">
+    <form action="/twitter/login" method="post" class="flex flex-col items-center justify-center space-y-4">
 
         <div class="sm:space-x-6 space-x-0">
             <label for="email">Enter Email: </label>
